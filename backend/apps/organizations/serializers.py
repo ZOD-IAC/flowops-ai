@@ -46,3 +46,11 @@ class MembershipCreateSerializer(serializers.Serializer):
             )
 
         return user
+
+class MembershipRoleUpadateSerializer(serializers.Serializer):
+    role = serializers.ChoiceField(
+        choices=[
+            Membership.Roles.ADMIN,
+            Membership.Roles.MEMBER
+        ]
+    )

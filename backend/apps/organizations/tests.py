@@ -290,3 +290,14 @@ class OrganizationAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
+    def test_OWNER_promote_member_to_ADMIN(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.post(
+            f"/api/organization/{self.organ1.id}/members/",
+            {"user": 999999, "role": Membership.Roles.MEMBER},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+

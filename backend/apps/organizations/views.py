@@ -9,6 +9,7 @@ from .serializers import (
     OrganizationSerializer,
     MembershipSerializer,
     MembershipCreateSerializer,
+    MembershipRoleUpadateSerializer
 )
 from .services import add_organization_member
 
@@ -102,7 +103,44 @@ class OrganizationMembersView(APIView):
             status=status.HTTP_201_CREATED
         )
 
-        
+class MembershipRoleUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def patch(self , request , organization_id, user_id , *args, **kwargs):
+        requester = get_object_or_404(
+            Membership, 
+            user= request.user,
+            organization_id=organization_id
+        )
+
+        if requester.role != Membership.Roles.OWNER:
+            return Response(
+                {"details":"Only owners can change roles."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        target= get_object_or_404(
+            Membership,
+            user_id = user_id,
+            organization_id=organization_id,
+        )
+
+        if target.Roles == Membership.Roles.OWNER:
+            return Response(
+                {"details":"Owner roles cannot be modified here."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = MembershipRoleUpadateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        target.role = serializer.validated_data["role"]
+        target.save(update_fields=["role"])
+
+
+        return Response(
+            MembershipSerializer(target).data,
+            status=status.HTTP_200_OK
+        )
 
         

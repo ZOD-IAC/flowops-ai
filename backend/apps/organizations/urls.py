@@ -4,7 +4,7 @@ from .views import OrganizationList, OrganizationMembersView, MembershipRoleUpda
 
 urlpatterns = [
     path("", OrganizationList.as_view() , name='organization-list'),
-    path("<organization_id>/members/",
+    path("<int:organization_id>/members/",
         OrganizationMembersView.as_view(),
         name='member-list'
     ),

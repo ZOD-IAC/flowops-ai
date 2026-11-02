@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import type { TokenPair } from '@/features/auth/types';
 
 const ACCESS_COOKIE = 'flowops_access';
-const REFRESH_COOKIE = 'flowops_refreshh';
+const REFRESH_COOKIE = 'flowops_refresh';
 
 const cookieOptions = {
   httpOnly: true,

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { User } from '@/features/auth/types';
+import { apiFetch } from '@/lib/api/client';
 
 export function useCurrentUser() {
   const [user, setUser] = useState<User | null>(null);
@@ -12,9 +13,8 @@ export function useCurrentUser() {
 
     async function loadUser() {
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await apiFetch('/api/auth/me', {
           signal: controller.signal,
-          cache: 'no-store',
         });
 
         if (!response.ok) return;

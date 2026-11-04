@@ -18,14 +18,15 @@ import type {
 } from '@/features/organizations/types';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Props = {
   params: Promise<{ organizationId: string }>;
 };
 
-export default async function OrganizationDashboard({ params }: Props) {
+async function WorkspaceContent({ params }: Props) {
   const { organizationId } = await params;
-
   const access = await getAccessToken();
 
   if (!access) {
@@ -140,5 +141,20 @@ export default async function OrganizationDashboard({ params }: Props) {
         })}
       </div>
     </div>
+  );
+}
+
+export default function WorkspacePage({ params }: Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className='space-y-5'>
+          <Skeleton className='h-10 w-64' />
+          <Skeleton className='h-48 w-full rounded-xl' />
+        </div>
+      }
+    >
+      <WorkspaceContent params={params} />
+    </Suspense>
   );
 }

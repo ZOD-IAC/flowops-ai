@@ -8,7 +8,11 @@ import type { OrganizationListResponse } from '@/features/organizations/types';
 import { OrganizationList } from '@/features/organizations/components/organization-list';
 import { CreateOrganizationDialog } from '@/features/organizations/components/create-organization-dialog';
 
-export default async function OrganizationsPage() {
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+async function OrganizationsContent() {
+  // Move your existing page's data fetching and JSX here.
   const access = await getAccessToken();
 
   if (!access) {
@@ -53,5 +57,27 @@ export default async function OrganizationsPage() {
 
       <OrganizationList organizations={organizations} />
     </div>
+  );
+}
+
+function OrganizationsSkeleton() {
+  return (
+    <div className='space-y-6'>
+      <Skeleton className='h-10 w-64' />
+
+      <div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
+        {[1, 2, 3].map((item) => (
+          <Skeleton key={item} className='h-44 rounded-xl' />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function OrganizationsPage() {
+  return (
+    <Suspense fallback={<OrganizationsSkeleton />}>
+      <OrganizationsContent />
+    </Suspense>
   );
 }

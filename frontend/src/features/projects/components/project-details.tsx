@@ -185,6 +185,17 @@ export function ProjectDetails({ organizationId, project }: Props) {
               )}
               Delete
             </Button>
+
+            <Button
+              nativeButton={false}
+              render={
+                <Link
+                  href={`/organizations/${organizationId}/projects/${project.id}/tasks`}
+                />
+              }
+            >
+              View Tasks
+            </Button>
           </div>
         )}
       </div>
